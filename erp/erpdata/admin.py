@@ -1,10 +1,21 @@
 from django.contrib import admin
-
+from django import forms
 from .models import User, Part, Categorys, Comment, CostOfWork, Document, ExtraWork, Process, Project, SampleDoc, Role, SampleStep, Stage, Work 
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
+class WorkForm(forms.ModelForm):
+    mota = forms.CharField(widget=CKEditorUploadingWidget)
+    class Meta:
+        model = Work 
+        fields = '__all__'
+
+
+
 
 class PartAdmin(admin.ModelAdmin):
     list_display = ["id", "tenbophan", "tenphongban", "ngaytao"]
     search_fields = ["tenbophan", "tenphongban"]
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ["id", "first_name", "last_name","email","sodienthoai", "diachi", "ngaysinh", ]
@@ -23,6 +34,7 @@ class StageAdmin(admin.ModelAdmin):
     search_fields = ["ten"]
 
 class WorkAdmin(admin.ModelAdmin):
+    froms = WorkForm
     list_display = ["ten", "mota", "trangthai", "chiphi", "ngaytao", "category", "process"]
     search_fields = ["ten", "category", "process"]
 
@@ -52,20 +64,28 @@ class SampleStepAdmin(admin.ModelAdmin):
     list_display = [""]
 
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Part, PartAdmin)
-admin.site.register(Categorys, CategorysAdmin)
-admin.site.register(Comment)
-admin.site.register(CostOfWork, CostOfWorkAdmin)
-admin.site.register(Document, DocumentAdmin)
-admin.site.register(ExtraWork, ExtraWorkAmin)
-admin.site.register(Process, ProcessAdmin)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(SampleDoc, SampleDocAdmin)
-admin.site.register(Role, RoleAdmin)
-admin.site.register(SampleStep)
-admin.site.register(Stage, StageAdmin)
-admin.site.register(Work, WorkAdmin)
+
+
+class ErpAdminSite(admin.AdminSite):
+    site_header = 'Quản Trị ERP'
+
+
+admin_site = ErpAdminSite('myerp')
+
+admin_site.register(User, UserAdmin)
+admin_site.register(Part, PartAdmin)
+admin_site.register(Categorys, CategorysAdmin)
+admin_site.register(Comment)
+admin_site.register(CostOfWork, CostOfWorkAdmin)
+admin_site.register(Document, DocumentAdmin)
+admin_site.register(ExtraWork, ExtraWorkAmin)
+admin_site.register(Process, ProcessAdmin)
+admin_site.register(Project, ProjectAdmin)
+admin_site.register(SampleDoc, SampleDocAdmin)
+admin_site.register(Role, RoleAdmin)
+admin_site.register(SampleStep)
+admin_site.register(Stage, StageAdmin)
+admin_site.register(Work, WorkAdmin)
 
 
 

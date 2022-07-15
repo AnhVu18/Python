@@ -2,14 +2,15 @@
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from ckeditor.fields import RichTextField 
 
 class User(AbstractUser):
-    avatar = models.ImageField(upload_to = 'avatar/%y/%m')
-    diachi = models.TextField()
+    avatar = models.ImageField(upload_to = 'avatar/%y/%m', null=True)
+    diachi = models.CharField(max_length=100, null=True)
     ngaysinh = models.DateField(null=True)
-    sodienthoai = models.CharField(max_length=12)
+    sodienthoai = models.CharField(max_length=12, null=True)
     quyenquanlyduan = models.BooleanField(default=False)
-    part = models.ForeignKey('Part', on_delete=models.CASCADE, default=None, null=True)
+    part = models.ManyToManyField('Part',  default=None, null=True)
     
 
 
@@ -24,13 +25,14 @@ class Part(models.Model):
 class ItemBase(models.Model):
       class Meta():
         abstract: True
+        
       ten = models.CharField(max_length=100, unique=True)
       ngaybatdau = models.DateTimeField(null=True, blank=True,default=None)
       ngayketthuc = models.DateTimeField(null=True, blank=True, default=None)
       ngaybatdauthucte = models.DateField(null=True, blank=True, default=None)
       ngayketthucthute= models.DateField(null=True, blank=True, default=None)
       ngaytao = models.DateField(auto_created=True)
-      idnhanvienthamgia = models.ManyToManyField('User', blank=True, null=True)
+      idnhanvienthamgia = models.ManyToManyField('User', blank=False, null=True)
       def __str__(self):
         return self.ten
 
@@ -40,7 +42,7 @@ class Project(ItemBase):
     duanquantrong = models.BooleanField()
     maduan = models.CharField(max_length=100)
 
-    idbophanthamgiaduan = models.ManyToManyField('Part', blank=True, null=True)
+    idbophanthamgiaduan = models.ManyToManyField('Part', blank=False, null=True)
 
 class Stage(models.Model):
     
@@ -56,14 +58,14 @@ class Stage(models.Model):
 class Categorys(ItemBase):
     chiphi = models.IntegerField()
     trangthai = models.BooleanField(default=False)
-    mota = models.TextField()
+    mota = RichTextField()
 
     stage = models.ForeignKey('Stage', on_delete=models.CASCADE)
 
     role = models.ManyToManyField('Role', null=True)
 
 class Work(ItemBase):
-    mota = models.TextField()
+    mota = RichTextField()
     trangthai = models.BooleanField(default=False)
     chiphi = models.IntegerField()
 
@@ -72,7 +74,7 @@ class Work(ItemBase):
 
 class ExtraWork(models.Model):
     ten = models.CharField(max_length=100, unique=True)
-    mota = models.TextField()
+    mota = RichTextField()
     trangthai = models.BooleanField()
     
     Work = models.ForeignKey('Work', on_delete=models.CASCADE)
@@ -95,7 +97,7 @@ class Document(models.Model):
 
 class Process(models.Model):
     ten = models.CharField(max_length=100, unique=True)
-    mota = models.TextField()
+    mota = RichTextField()
 
     createby = models.ForeignKey('User', on_delete=models.CASCADE)
     def __str__(self):
@@ -113,7 +115,7 @@ class SampleDoc(models.Model):
 
 class SampleStep(models.Model):
     ten = models.CharField(max_length=100)
-    mota = models.TextField()
+    mota = RichTextField()
     trangthai = models.BooleanField(default=False)
 
     createby = models.ForeignKey('User', on_delete=models.CASCADE)
@@ -151,7 +153,7 @@ class CostOfWork(models.Model):
     
 
 class Comment(models.Model):
-    noidung = models.TextField()
+    noidung = RichTextField()
     ngaytao = models.DateTimeField(auto_created=True)
 
     category = models.ForeignKey('Categorys', on_delete=models.CASCADE)

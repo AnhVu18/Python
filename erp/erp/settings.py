@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'erpdata.apps.ErpdataConfig',
+    'ckeditor',
+    'ckeditor_uploader',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'erp.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5
+}
+
 
 TEMPLATES = [
     {
@@ -88,6 +97,7 @@ AUTH_USER_MODEL = 'erpdata.User'
 
 STATIC_URL ='/static/'
 MEDIA_ROOT ='%s/erpdata/static' % BASE_DIR
+CKEDITOR_UPLOAD_PATH = 'avatar/'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
